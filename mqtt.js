@@ -1,11 +1,17 @@
 const mqtt = require('mqtt');
 const mqttWildcard = require('mqtt-wildcard');
+const settings = require("./settings");
+
 
 const equipmentRequestTopic = 'place/+/+/equipment/request';
 const workersRequestTopic = 'place/+/+/workers/request';
 
-const client  = mqtt.connect('mqtts://10.42.0.1', {
-    rejectUnauthorized: false
+
+const client  = mqtt.connect('mqtts://' + settings.MQTT_SERVER, {
+    rejectUnauthorized: false,
+    port: settings.MQTT_PORT,
+    username: settings.MQTT_USERNAME,
+    password: settings.MQTT_PASSWORD
 });
 
 
@@ -14,8 +20,8 @@ client.on('connect', function () {
     client.subscribe(workersRequestTopic);
 });
 
+
 client.on('message', function(topic, message) {
-    let params;
     if((params = mqttWildcard(topic, equipmentRequestTopic)) !== null){
 
     }
