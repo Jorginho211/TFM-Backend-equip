@@ -58,4 +58,14 @@ typings/
 # dotenv environment variables file
 .env
 
+# certs
+certs/*.crt
+certs/*.key
+
+# db
+db/equip.db
+
+# vscode
+.vscode
+
 
