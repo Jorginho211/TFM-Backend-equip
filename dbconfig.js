@@ -15,13 +15,12 @@ let init = function() {
     `);
 
     db.run(`
-        CREATE TABLE IF NOT EXISTS MonitorData (
-            idUser              INTEGER PRIMARY KEY NOT NULL,
-            TokenAuthenticate   TEXT    NOT NULL,
-            Username            TEXT    NOT NULL,
-            Password            TEXT    NOT NULL,
-            Salt                TEXT    NOT NULL,
-            FOREIGN KEY(idUser) REFERENCES Users(id),
+        CREATE TABLE IF NOT EXISTS Authentication (
+            idUser              INTEGER     PRIMERY KEY NOT NULL,
+            Username            TEXT        NOT NULL,
+            Password            TEXT        NOT NULL,
+            Salt                BOOLEAN     NOT NULL,
+            FOREIGN KEY(idUser) REFERENCES Users(id) ON DELETE CASCADE ON UPDATE CASCADE,
             UNIQUE(Username)
         )
     `);
@@ -40,6 +39,17 @@ let init = function() {
 
 
     db.run(`
+        CREATE TABLE IF NOT EXISTS User_has_Places (
+            idPlace     INTEGER     NOT NULL,
+            idUser      INTEGER     NOT NULL,
+            PRIMARY KEY(idPlace, idUser),
+            FOREIGN KEY(idPlace) REFERENCES Places(id) ON DELETE CASCADE ON UPDATE CASCADE,
+            FOREIGN KEY(idUser) REFERENCES Places(id) ON DELETE CASCADE ON UPDATE CASCADE
+        )
+    `);
+
+
+    db.run(`
         CREATE TABLE IF NOT EXISTS Equipments (
             id      INTEGER     PRIMARY KEY AUTOINCREMENT NOT NULL,
             MajorId INTEGER     NOT NULL,
@@ -51,15 +61,26 @@ let init = function() {
 
 
     db.run(`
-        CREATE TABLE IF NOT EXISTS Equipment (
+        CREATE TABLE IF NOT EXISTS Places_has_Equipment (
+            idPlace     INTEGER     NOT NULL,
+            idUser      INTEGER     NOT NULL,
+            PRIMARY KEY(idPlace, idUser),
+            FOREIGN KEY(idPlace) REFERENCES Places(id) ON DELETE CASCADE ON UPDATE CASCADE,
+            FOREIGN KEY(idUser) REFERENCES Places(id) ON DELETE CASCADE ON UPDATE CASCADE
+        )
+    `);
+
+
+    db.run(`
+        CREATE TABLE IF NOT EXISTS MonitorData (
             idUser      INTEGER NULL,
             idPlace     INTEGER NULL,
             idEquipment INTEGER NULL,
             Date        DATE    NOT NULL,
             PRIMARY KEY(idUser, idPlace, idEquipment),
-            FOREIGN KEY(idUser) REFERENCES Users(id),
-            FOREIGN KEY(idPlace) REFERENCES Places(id),
-            FOREIGN KEY(idEquipment) REFERENCES Equipments(id)
+            FOREIGN KEY(idUser) REFERENCES Users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+            FOREIGN KEY(idPlace) REFERENCES Places(id) ON DELETE CASCADE ON UPDATE CASCADE,
+            FOREIGN KEY(idEquipment) REFERENCES Equipments(id) ON DELETE CASCADE ON UPDATE CASCADE
         )
     `);
 }

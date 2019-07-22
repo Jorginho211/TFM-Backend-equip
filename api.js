@@ -5,15 +5,13 @@ const https = require("https");
 const settings = require("./settings");
 
 const app = express();
-
+const db = require('./dbconfig');
+db.init();
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-app.get("/", function(req, res){
-    res.status(200);
-    res.json("{status: 1}");
-});
+app.use("/api/v1", require('./routes/router'));
 
 const options = {
     key: fs.readFileSync(settings.SERVER_KEY),
