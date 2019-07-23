@@ -16,13 +16,32 @@ class UserDao {
         });
     }
 
-    findUser(idUser) {
+    findById(idUser) {
         let sqlRequest = "SELECT * FROM Users WHERE id=$idUser"; 
         let sqlParams = { $idUser: idUser };
 
         return this.daoCommon.findOne(sqlRequest, sqlParams).then(row => {
             return new User(row.id, row.Name, row.Lastname, !!row.IsAdmin, row.Uuid, row.FrequencySendData);
         });
+    }
+
+    findAll() {
+        let sqlRequest = "SELECT * FROM Users";
+
+        return this.daoCommon.findAll(sqlRequest).then(rows => {
+            let users = [];
+            for (const row of rows) {
+                users.push(new User(row.id, row.Name, row.Lastname, !!row.IsAdmin, row.Uuid, row.FrequencySendData));
+            }
+            return users;
+        });
+    }
+
+    deleteById(idUser) {
+        let sqlRequest = "DELETE FROM Users WHERE id=$idUser"; 
+        let sqlParams = { $idUser: idUser };
+
+        return this.daoCommon.run(sqlRequest, sqlParams);
     }
 
     create(user, authentication) {
@@ -46,9 +65,10 @@ class UserDao {
                 $password: authentication.password,
                 $salt: authentication.salt
             };
-
-            return this.daoCommon.run(sqlRequest, sqlParams);
-        });
+            
+            this.daoCommon.run(sqlRequest, sqlParams);
+            return idUser;
+        })
     }
 }
 

@@ -39,7 +39,7 @@ class UserController {
 
             data.token = token;
 
-            return this.userDao.findUser(authentication.idUser);
+            return this.userDao.findById(authentication.idUser);
         }).then((user) => {
             data.user = user;
             this.commonController.success(res)(data);
@@ -64,9 +64,36 @@ class UserController {
         authentication.generatePasswordSalt(req.body.authentication.password);
 
         return this.userDao.create(user, authentication)
-        .then(this.commonController.editSuccess(res))
+        .then((idUser) => {
+            return this.userDao.findById(idUser);
+        })
+        .then((user2) => {
+            return this.commonController.editSuccess(res)(user2);
+        })
         .catch(this.commonController.serverError(res));
+    }
 
+
+    findAll(req, res) {
+        this.userDao.findAll()
+            .then(this.commonController.success(res))
+            .catch(this.commonController.success(res));
+    }
+
+
+    findById(req, res) {
+        let id = req.params.id;
+
+        this.userDao.findById(id)
+            .then(this.commonController.success(res))
+            .catch(this.commonController.findError(res));
+    }
+
+
+    deleteById(req, res) {
+        let id = req.params.id;
+        this.userDao.deleteById(id)
+            .then(this.commonController.deleteSuccess(res));
     }
 }
 

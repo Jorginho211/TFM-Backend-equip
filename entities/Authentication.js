@@ -13,7 +13,6 @@ class Authentication {
         let passwordHash = password + this.salt;
         passwordHash = sha256.update(passwordHash).digest('base64');
 
-        console.log(passwordHash);
         if(this.password === passwordHash){
             return true;
         }

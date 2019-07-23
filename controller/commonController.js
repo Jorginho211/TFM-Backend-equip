@@ -9,7 +9,14 @@ class controllerCommon {
     editSuccess(res) {
         return (result) => {
             res.status(201); // Created/Updated/Deleted
-            res.json({id: result});
+            res.json(result);
+        }
+    }
+
+    deleteSuccess(res) {
+        return (result) => {
+            res.status(202); // Deleted
+            res.json({ id: result });
         }
     }
 
@@ -20,9 +27,9 @@ class controllerCommon {
         }
     }
 
-    notFound(res) {
+    findError(res) {
         return (error) => {
-            res.status(404); 
+            res.status(404); // Not found
             res.json(error);
         }
     }

@@ -83,6 +83,8 @@ let init = function() {
             FOREIGN KEY(idEquipment) REFERENCES Equipments(id) ON DELETE CASCADE ON UPDATE CASCADE
         )
     `);
+
+    db.run(`PRAGMA foreign_keys = ON`);
 }
 
 
