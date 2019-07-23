@@ -41,7 +41,9 @@ class UserDao {
         let sqlRequest = "DELETE FROM Users WHERE id=$idUser"; 
         let sqlParams = { $idUser: idUser };
 
-        return this.daoCommon.run(sqlRequest, sqlParams);
+        return this.daoCommon.run(sqlRequest, sqlParams).then(() => {
+            return idUser;
+        })
     }
 
     create(user, authentication) {
