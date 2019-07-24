@@ -7,9 +7,18 @@ class UserDao {
         this.daoCommon = new DaoCommon();
     }
 
-    findAuthentication(username){
+    findAuthenticationByUsername(username){
         let sqlRequest = "SELECT * FROM Authentication WHERE Username=$username"; 
         let sqlParams = { $username: username };
+
+        return this.daoCommon.findOne(sqlRequest, sqlParams).then(row => {
+            return new Authentication(row.idUser, row.Username, row.Password, row.Salt);
+        });
+    }
+
+    findAuthenticationById(idUser){
+        let sqlRequest = "SELECT * FROM Authentication WHERE idUser=$idUser"; 
+        let sqlParams = { $idUser: idUser };
 
         return this.daoCommon.findOne(sqlRequest, sqlParams).then(row => {
             return new Authentication(row.idUser, row.Username, row.Password, row.Salt);
@@ -71,6 +80,36 @@ class UserDao {
             this.daoCommon.run(sqlRequest, sqlParams);
             return idUser;
         })
+    }
+
+    update(user, authentication) {
+        let sqlRequest = "UPDATE Users SET Name=$name, Lastname=$lastname, IsAdmin=$isAdmin, FrequencySendData=$frequencySendData WHERE id=$id";
+        let sqlParams = {
+            $id: user.id,
+            $name: user.name,
+            $lastname: user.lastname,
+            $isAdmin: +user.isAdmin,
+            $frequencySendData: user.frequencySendData
+        }
+
+        return this.daoCommon.run(sqlRequest, sqlParams).then(() => {
+            sqlRequest = "UPDATE Authentication SET Username=$username, Password=$password, Salt=$salt WHERE idUser=$idUser";
+            sqlParams = {
+                $idUser: authentication.idUser,
+                $username: authentication.username,
+                $password: authentication.password,
+                $salt: authentication.salt
+            };
+
+            return this.daoCommon.run(sqlRequest, sqlParams)
+        })
+        .then(() => {
+            user.authentication = {
+                username: authentication.username
+            }
+
+            return user;
+        });
     }
 }
 

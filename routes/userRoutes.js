@@ -28,4 +28,8 @@ router.delete('/:id', authorizationMiddleware.authorization, authorizationMiddle
     userController.deleteById(req, res);
 });
 
+router.put('/:id', authorizationMiddleware.authorization, authorizationMiddleware.isAdmin, function(req,res) {
+    userController.update(req, res);
+});
+
 module.exports = router;

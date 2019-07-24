@@ -23,7 +23,7 @@ class UserController {
         let password = req.headers.password;
 
         let data = {};
-        this.userDao.findAuthentication(username).then((authentication) => {
+        this.userDao.findAuthenticationByUsername(username).then((authentication) => {
             if(!authentication.checkPassword(password)){
                 throw Error('Unhautorized');
             }
@@ -94,6 +94,32 @@ class UserController {
         let id = req.params.id;
         this.userDao.deleteById(id)
             .then(this.commonController.deleteSuccess(res));
+    }
+
+    update(req, res) {
+        let user;
+        let idUser = req.params.id;
+
+        return this.userDao.findById(idUser).then((userFind) => {
+            user = userFind;
+            return this.userDao.findAuthenticationById(user.id);
+        })
+        .then((authentication) => {
+            user.name = req.body.name !== undefined ? req.body.name : user.name;
+            user.lastname = req.body.lastname !== undefined ? req.body.lastname : user.lastname;
+            user.isAdmin = req.body.isAdmin !== undefined ? req.body.isAdmin : user.isAdmin;
+            user.frequencySendData = req.body.frequencySendData !== undefined ? req.body.frequencySendData : user.frequencySendData;
+
+            authentication.username = req.body.authentication.username !== undefined ? req.body.authentication.username : authentication.username;
+
+            if(req.body.authentication.password !== undefined){
+                authentication.generatePasswordSalt(req.body.authentication.password);
+            }
+
+            return this.userDao.update(user, authentication);
+        })
+        .then(this.commonController.editSuccess(res))
+        .catch(this.commonController.serverError(res));
     }
 }
 
