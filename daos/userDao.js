@@ -29,8 +29,18 @@ class UserDao {
         let sqlRequest = "SELECT * FROM Users WHERE id=$idUser"; 
         let sqlParams = { $idUser: idUser };
 
+        let user;
         return this.daoCommon.findOne(sqlRequest, sqlParams).then(row => {
-            return new User(row.id, row.Name, row.Lastname, !!row.IsAdmin, row.Uuid, row.FrequencySendData);
+            user = new User(row.id, row.Name, row.Lastname, !!row.IsAdmin, row.Uuid, row.FrequencySendData);
+
+            return this.findAuthenticationById(user.id);
+        })
+        .then((authentication) => {
+            user.authentication = {
+                username = authentication.username
+            }
+
+            return user;
         });
     }
 
