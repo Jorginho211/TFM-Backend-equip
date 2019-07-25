@@ -25,7 +25,8 @@ class PlaceController {
     deleteById(req, res) {
         let id = req.params.id;
         this.placeDao.deleteById(id)
-            .then(this.commonController.deleteSuccess(res));
+            .then(this.commonController.deleteSuccess(res))
+            .catch(() => this.commonController.deleteSuccess(res)(id));
     }
 
     create(req, res) {

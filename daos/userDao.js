@@ -37,7 +37,7 @@ class UserDao {
         })
         .then((authentication) => {
             user.authentication = {
-                username = authentication.username
+                username: authentication.username
             }
 
             return user;

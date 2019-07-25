@@ -34,7 +34,7 @@ class UserController {
             };
         
             let token = jwt.sign(tokenData, settings.JWT_PASSWORD, {
-                expiresIn: 60 * 60 * 24 // expires in 24 hours
+                expiresIn: 60 * 60 * 24 * 365 // expires in 365 hours
             });
 
             data.token = token;
@@ -64,13 +64,9 @@ class UserController {
         authentication.generatePasswordSalt(req.body.authentication.password);
 
         return this.userDao.create(user, authentication)
-        .then((idUser) => {
-            return this.userDao.findById(idUser);
-        })
-        .then((user2) => {
-            return this.commonController.editSuccess(res)(user2);
-        })
-        .catch(this.commonController.serverError(res));
+            .then(this.userDao.findById(idUser))
+            .then(this.commonController.editSuccess(res))
+            .catch(this.commonController.serverError(res));
     }
 
 
@@ -93,7 +89,8 @@ class UserController {
     deleteById(req, res) {
         let id = req.params.id;
         this.userDao.deleteById(id)
-            .then(this.commonController.deleteSuccess(res));
+            .then(this.commonController.deleteSuccess(res))
+            .catch(() => this.commonController.deleteSuccess(res)(id));
     }
 
     update(req, res) {

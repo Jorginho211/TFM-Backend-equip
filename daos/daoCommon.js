@@ -12,9 +12,7 @@ class DaoCommon {
                         new DaoError(20, "Internal server error")
                     );
                 } else if (rows === null || rows.length === 0) {
-                    reject(
-                        new DaoError(21, "Entity not found")
-                    );
+                    resolve([]);
                 } else {
                     resolve(rows);
                 }
@@ -31,9 +29,7 @@ class DaoCommon {
                         new DaoError(20, "Internal server error")
                     );
                 } else if (rows === null || rows.length === 0) {
-                    reject(
-                        new DaoError(21, "Entity not found")
-                    );
+                    resolve([]);
                 } else {
                     resolve(rows);
                 }

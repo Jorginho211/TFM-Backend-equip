@@ -9,7 +9,7 @@ const db = require('./dbconfig');
 db.init();
 
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
 
 app.use("/api/v1", require('./routes/router'));
 
