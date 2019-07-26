@@ -65,7 +65,7 @@ class EquipmentDao {
     }
 
     findEquipmentsByIdPlace(idPlace) {
-        let sqlRequest = "SELECT * FROM Equipments INNER JOIN Places_has_Equipment ON idPlace = $idPlace";
+        let sqlRequest = "SELECT * FROM Equipments INNER JOIN Places_has_Equipment ON idEquipment = id WHERE idPlace = $idPlace";
         let sqlParams = { $idPlace: Number(idPlace) };
 
         return this.daoCommon.findAllParams(sqlRequest, sqlParams).then((rows) => {
