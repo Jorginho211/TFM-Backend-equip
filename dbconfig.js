@@ -44,7 +44,7 @@ let init = function() {
             idUser      INTEGER     NOT NULL,
             PRIMARY KEY(idPlace, idUser),
             FOREIGN KEY(idPlace) REFERENCES Places(id) ON DELETE CASCADE ON UPDATE CASCADE,
-            FOREIGN KEY(idUser) REFERENCES Places(id) ON DELETE CASCADE ON UPDATE CASCADE
+            FOREIGN KEY(idUser) REFERENCES Users(id) ON DELETE CASCADE ON UPDATE CASCADE
         )
     `);
 
@@ -63,10 +63,10 @@ let init = function() {
     db.run(`
         CREATE TABLE IF NOT EXISTS Places_has_Equipment (
             idPlace     INTEGER     NOT NULL,
-            idUser      INTEGER     NOT NULL,
-            PRIMARY KEY(idPlace, idUser),
+            idEquipment      INTEGER     NOT NULL,
+            PRIMARY KEY(idPlace, idEquipment),
             FOREIGN KEY(idPlace) REFERENCES Places(id) ON DELETE CASCADE ON UPDATE CASCADE,
-            FOREIGN KEY(idUser) REFERENCES Places(id) ON DELETE CASCADE ON UPDATE CASCADE
+            FOREIGN KEY(idEquipment) REFERENCES Equipments(id) ON DELETE CASCADE ON UPDATE CASCADE
         )
     `);
 
