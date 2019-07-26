@@ -12,7 +12,7 @@ class PlaceDao {
         return this.daoCommon.findAll(sqlRequest).then(rows => {
             let places = [];
             for (const row of rows) {
-                places.push(new Place(row.id, row.MajorId, row.MinorId, row.Blueprint, row.Name));
+                places.push(new Place(row.id, row.MajorId, row.MinorId, undefined, row.Name));
             }
             return places;
         });
