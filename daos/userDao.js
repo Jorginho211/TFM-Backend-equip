@@ -121,6 +121,41 @@ class UserDao {
             return user;
         });
     }
+
+    findUsersByIdPlace(idPlace) {
+        let sqlRequest = "SELECT * FROM Users INNER JOIN Places_has_User ON idUser = id WHERE idPlace = $idPlace";
+        let sqlParams = { $idPlace: Number(idPlace) };
+
+        return this.daoCommon.findAllParams(sqlRequest, sqlParams).then((rows) => {
+            let equipments = [];
+            for (const row of rows) {
+                equipments.push(new User(row.id, row.Name, row.Lastname, !!row.IsAdmin, row.Uuid, row.FrequencySendData));
+            }
+
+            return equipments;
+        });
+    }
+
+    deleteAllUsersPlace(idPlace){
+        let sqlRequest = "DELETE FROM Places_has_User WHERE idPlace = $idPlace";
+        let sqlParams = { $idPlace: idPlace };
+
+        return this.daoCommon.delete(sqlRequest, sqlParams).then(() => {
+            return true;
+        });
+    }
+
+    asociateUsersPlace(idUser, idPlace) {
+        let sqlRequest = "INSERT INTO Places_has_User (idPlace, idUser) VALUES ($idPlace, $idUser)";
+        let sqlParams = { 
+            $idPlace: idPlace,
+            $idUser: idUser
+        };
+
+        return this.daoCommon.run(sqlRequest, sqlParams).then(() => {
+            return idUser;
+        });
+    }
 }
 
 module.exports = UserDao;

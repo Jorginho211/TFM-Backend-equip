@@ -1,6 +1,7 @@
 const CommonController = require("./commonController");
 const PlaceDao = require("../daos/placeDao");
 const EquipmentDao = require("../daos/equipmentDao");
+const UserDao = require("../daos/userDao");
 
 const Place = require("../entities/Place");
 
@@ -8,6 +9,7 @@ class PlaceController {
     constructor() {
         this.placeDao = new PlaceDao();
         this.equipmentDao = new EquipmentDao();
+        this.userDao = new UserDao();
         this.commonController = new CommonController();
     }
 
@@ -77,6 +79,30 @@ class PlaceController {
 
                 for(let idEquipment of req.body){
                     promises.push(this.equipmentDao.asociateEquipmentPlace(idEquipment, id));
+                }
+
+                return Promise.all(promises);
+            })
+            .then(this.commonController.success(res))
+            .catch(this.commonController.serverError(res));
+    }
+
+    findPlaceUsers(req, res) {
+        let id = req.params.id;
+
+        return this.userDao.findUsersByIdPlace(id)
+            .then(this.commonController.success(res));
+    }
+
+    asociatePlaceUsers(req, res) {
+        let id = req.params.id;
+
+        return this.userDao.deleteAllUsersPlace(id)
+            .then(() => {
+                let promises = [];
+
+                for(let idUser of req.body){
+                    promises.push(this.userDao.asociateUsersPlace(idUser, id));
                 }
 
                 return Promise.all(promises);

@@ -39,7 +39,7 @@ let init = function() {
 
 
     db.run(`
-        CREATE TABLE IF NOT EXISTS User_has_Places (
+        CREATE TABLE IF NOT EXISTS Places_has_User (
             idPlace     INTEGER     NOT NULL,
             idUser      INTEGER     NOT NULL,
             PRIMARY KEY(idPlace, idUser),

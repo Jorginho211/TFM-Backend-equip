@@ -36,4 +36,12 @@ router.post('/:id/equipments', authorizationMiddleware.authorization, authorizat
     placeController.asociatePlaceEquipments(req, res);
 });
 
+router.get('/:id/users', authorizationMiddleware.authorization, authorizationMiddleware.isAdmin, function(req,res){
+    placeController.findPlaceUsers(req, res);
+});
+
+router.post('/:id/users', authorizationMiddleware.authorization, authorizationMiddleware.isAdmin, function(req, res) {
+    placeController.asociatePlaceUsers(req, res);
+});
+
 module.exports = router;
