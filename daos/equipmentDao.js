@@ -63,6 +63,41 @@ class EquipmentDao {
             return idEquipment;
         })
     }
+
+    findEquipmentsByIdPlace(idPlace) {
+        let sqlRequest = "SELECT * FROM Equipments INNER JOIN Places_has_Equipment ON idPlace = $idPlace";
+        let sqlParams = { $idPlace: Number(idPlace) };
+
+        return this.daoCommon.findAllParams(sqlRequest, sqlParams).then((rows) => {
+            let equipments = [];
+            for (const row of rows) {
+                equipments.push(new Equipment(row.id, row.MajorId, row.MinorId, row.Name));
+            }
+
+            return equipments;
+        });
+    }
+
+    deleteAllEquipmentsPlace(idPlace){
+        let sqlRequest = "DELETE FROM Places_has_Equipment WHERE idPlace = $idPlace";
+        let sqlParams = { $idPlace: idPlace };
+
+        return this.daoCommon.delete(sqlRequest, sqlParams).then(() => {
+            return true;
+        });
+    }
+
+    asociateEquipmentPlace(idEquipment, idPlace) {
+        let sqlRequest = "INSERT INTO Places_has_Equipment (idPlace, idEquipment) VALUES ($idPlace, $idEquipment)";
+        let sqlParams = { 
+            $idPlace: idPlace,
+            $idEquipment: idEquipment
+        };
+
+        return this.daoCommon.run(sqlRequest, sqlParams).then(() => {
+            return idEquipment;
+        });
+    }
 }
 
 module.exports = EquipmentDao;

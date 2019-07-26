@@ -1,10 +1,13 @@
 const CommonController = require("./commonController");
 const PlaceDao = require("../daos/placeDao");
+const EquipmentDao = require("../daos/equipmentDao");
+
 const Place = require("../entities/Place");
 
 class PlaceController {
     constructor() {
         this.placeDao = new PlaceDao();
+        this.equipmentDao = new EquipmentDao();
         this.commonController = new CommonController();
     }
 
@@ -55,6 +58,30 @@ class PlaceController {
                 return this.placeDao.update(place);
             })
             .then(this.commonController.editSuccess(res))
+            .catch(this.commonController.serverError(res));
+    }
+
+    findPlaceEquipments(req, res) {
+        let id = req.params.id;
+
+        return this.equipmentDao.findEquipmentsByIdPlace(id)
+            .then(this.commonController.success(res));
+    }
+
+    asociatePlaceEquipments(req, res) {
+        let id = req.params.id;
+
+        return this.equipmentDao.deleteAllEquipmentsPlace(id)
+            .then(() => {
+                let promises = [];
+
+                for(let idEquipment of req.body){
+                    promises.push(this.equipmentDao.asociateEquipmentPlace(idEquipment, id));
+                }
+
+                return Promise.all(promises);
+            })
+            .then(this.commonController.success(res))
             .catch(this.commonController.serverError(res));
     }
 }

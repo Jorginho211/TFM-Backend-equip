@@ -76,6 +76,23 @@ class DaoCommon {
         });
     }
 
+    delete(sqlRequest, sqlParams) {
+        return new Promise(function (resolve, reject) {
+            let stmt = database.db.prepare(sqlRequest);
+            stmt.run(sqlParams, function (err) {
+                if (this.changes === 1) {
+                    resolve(this.lastID);
+                } else if (this.changes === 0) {
+                    resolve();
+                } else {
+                    reject(
+                        new DaoError(11, "Invalid arguments")
+                    )
+                }
+            })
+        });
+    }
+
     run(sqlRequest, sqlParams) {
         return new Promise(function (resolve, reject) {
             let stmt = database.db.prepare(sqlRequest);

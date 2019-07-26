@@ -28,4 +28,12 @@ router.delete('/:id', authorizationMiddleware.authorization, authorizationMiddle
     placeController.deleteById(req, res);
 });
 
+router.get('/:id/equipments', authorizationMiddleware.authorization, authorizationMiddleware.isAdmin, function(req,res){
+    placeController.findPlaceEquipments(req, res);
+});
+
+router.post('/:id/equipments', authorizationMiddleware.authorization, authorizationMiddleware.isAdmin, function(req, res) {
+    placeController.asociatePlaceEquipments(req, res);
+});
+
 module.exports = router;
