@@ -127,12 +127,12 @@ class UserDao {
         let sqlParams = { $idPlace: Number(idPlace) };
 
         return this.daoCommon.findAllParams(sqlRequest, sqlParams).then((rows) => {
-            let equipments = [];
+            let users = [];
             for (const row of rows) {
-                equipments.push(new User(row.id, row.Name, row.Lastname, !!row.IsAdmin, row.Uuid, row.FrequencySendData));
+                users.push(new User(row.id, row.Name, row.Lastname, !!row.IsAdmin, row.Uuid, row.FrequencySendData));
             }
 
-            return equipments;
+            return users;
         });
     }
 
