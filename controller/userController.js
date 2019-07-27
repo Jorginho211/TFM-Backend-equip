@@ -1,5 +1,6 @@
 
 const UserDao = require("../daos/userDao");
+const PlaceDao = require("../daos/placeDao");
 const CommonController = require("./commonController");
 
 const jwt = require("jsonwebtoken");
@@ -14,6 +15,7 @@ const uuid = require('uuid');
 class UserController {
     constructor() {
         this.userDao = new UserDao();
+        this.placeDao = new PlaceDao();
         this.commonController = new CommonController();
     }
 
@@ -117,6 +119,14 @@ class UserController {
         })
         .then(this.commonController.editSuccess(res))
         .catch(this.commonController.serverError(res));
+    }
+
+    findUserPlaces(req, res) {
+        let id = req.params.id;
+
+        return this.placeDao.findPlacesByIdUser(id)
+            .then(this.commonController.success(res))
+            .catch(this.commonController.success(res));
     }
 }
 

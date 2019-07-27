@@ -32,4 +32,8 @@ router.put('/:id', authorizationMiddleware.authorization, authorizationMiddlewar
     userController.update(req, res);
 });
 
+router.get('/:id/places', authorizationMiddleware.authorization, function(req, res){
+    userController.findUserPlaces(req, res);
+});
+
 module.exports = router;

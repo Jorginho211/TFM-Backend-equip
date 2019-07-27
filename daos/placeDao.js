@@ -65,6 +65,21 @@ class PlaceDao {
             return idPlace;
         })
     }
+
+
+    findPlacesByIdUser(idUser) {
+        let sqlRequest = "SELECT * FROM Places INNER JOIN Places_has_User ON idPlace = id WHERE idUser = $idUser";
+        let sqlParams = { $idUser: idUser };
+
+        return this.daoCommon.findAllParams(sqlRequest, sqlParams).then((rows) => {
+            let places = [];
+            for (const row of rows) {
+                places.push(new Place(row.id, row.MajorId, row.MinorId, undefined, row.Name));
+            }
+
+            return places;
+        });
+    }
 }
 
 module.exports = PlaceDao;
