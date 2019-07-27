@@ -4,6 +4,7 @@ const EquipmentDao = require("../daos/equipmentDao");
 const UserDao = require("../daos/userDao");
 
 const Place = require("../entities/Place");
+const mqtt = require("../mqtt");
 
 class PlaceController {
     constructor() {
@@ -73,7 +74,12 @@ class PlaceController {
     asociatePlaceEquipments(req, res) {
         let id = req.params.id;
 
-        return this.equipmentDao.deleteAllEquipmentsPlace(id)
+        let place;
+        return this.placeDao.findById(id)
+            .then((p) => {
+                place = p;
+                return this.equipmentDao.deleteAllEquipmentsPlace(place.id);
+            })
             .then(() => {
                 let promises = [];
 
@@ -83,7 +89,11 @@ class PlaceController {
 
                 return Promise.all(promises);
             })
-            .then(this.commonController.success(res))
+            .then(() => this.equipmentDao.findEquipmentsByIdPlace(place.id))
+            .then((equipments) => {
+                mqtt.publishEquipmentsPlace(place, equipments);
+                return this.commonController.success(res)(equipments);
+            })
             .catch(this.commonController.serverError(res));
     }
 
@@ -97,7 +107,12 @@ class PlaceController {
     asociatePlaceUsers(req, res) {
         let id = req.params.id;
 
-        return this.userDao.deleteAllUsersPlace(id)
+        let place;
+        return this.placeDao.findById(id)
+            .then((p) => {
+                place = p;
+                return this.userDao.deleteAllUsersPlace(p.id);
+            })
             .then(() => {
                 let promises = [];
 
@@ -107,8 +122,12 @@ class PlaceController {
 
                 return Promise.all(promises);
             })
-            .then(this.commonController.success(res))
-            .catch(this.commonController.serverError(res));
+            .then(() => this.userDao.findUsersByIdPlace(place.id))
+            .then((users) => {
+                mqtt.publishUsersPlace(place, users);
+                return this.commonController.success(res)(users);
+            })
+            .catch(this.commonController.serverError(res))
     }
 }
 

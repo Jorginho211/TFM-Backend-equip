@@ -27,6 +27,18 @@ class PlaceDao {
         });
     }
 
+    findByMajorMinor(major, minor){
+        let sqlRequest = "SELECT * FROM Places WHERE MajorId = $major AND MinorId = $minor";
+        let sqlParams = { 
+            $major: major,
+            $minor: minor 
+        };
+
+        return this.daoCommon.findOne(sqlRequest, sqlParams).then(row => {
+            return new Place(row.id, row.MajorId, row.MinorId, row.Blueprint, row.Name);
+        });
+    }
+
     create(place) {
         let sqlRequest = "INSERT INTO Places (MajorId, MinorId, Blueprint, Name) VALUES ($major, $minor, $blueprint, $name)";
         let sqlParams = {
