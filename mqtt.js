@@ -23,11 +23,39 @@ client.on('connect', function () {
 
 client.on('message', function(topic, message) {
     if((params = mqttWildcard(topic, equipmentRequestTopic)) !== null){
-
+        
     }
     else if((params = mqttWildcard(topic, workersRequestTopic)) !== null){
-        
+
     }
 });
 
-module.exports = client;
+function publishUsersPlace(place, users) {
+    const topic = 'place/' + place.major + '/' + place.minor + '/workers';
+
+    let usersUuid = users.reduce((previousValue, currentValue) => {
+        if(previousValue === ""){
+            return currentValue.uuid;
+        }
+        
+        return previousValue + ";" + currentValue.uuid;
+    }, "");
+
+    client.publish(topic, usersUuid);
+}
+
+function publishEquipmentsPlace(place, equipments){
+    const topic = 'place/' + place.major + '/' + place.minor + '/equipment';
+
+    let equipmentAllow = equipments.reduce((previousValue, currentValue) => {
+        return previousValue | currentValue.minor;
+    }, 0);
+
+    client.publish(topic, equipmentAllow.toString());
+}
+
+module.exports = {
+    publishUsersPlace,
+    publishEquipmentsPlace,
+    client
+}
