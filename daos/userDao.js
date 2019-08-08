@@ -76,8 +76,10 @@ class UserDao {
         };
         
         return this.daoCommon.run(sqlRequest, sqlParams).then((idUser) => {
+            return idUser;
+        })
+        .then((idUser) => {
             authentication.idUser = idUser;
-
             sqlRequest = "INSERT INTO Authentication (idUser, Username, Password, Salt) VALUES ($idUser, $username, $password, $salt)";
             
             sqlParams = {
@@ -86,10 +88,15 @@ class UserDao {
                 $password: authentication.password,
                 $salt: authentication.salt
             };
-            
-            this.daoCommon.run(sqlRequest, sqlParams);
-            return idUser;
+
+            return this.daoCommon.run(sqlRequest, sqlParams);
         })
+        .then(() => {
+            return authentication.idUser;
+        })
+        .catch(() => {
+            this.deleteById(authentication.idUser);
+        });
     }
 
     update(user, authentication) {

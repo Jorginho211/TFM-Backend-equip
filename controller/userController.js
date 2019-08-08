@@ -66,7 +66,7 @@ class UserController {
         authentication.generatePasswordSalt(req.body.authentication.password);
 
         return this.userDao.create(user, authentication)
-            .then(this.userDao.findById(idUser))
+            .then((idUser) => this.userDao.findById(idUser))
             .then(this.commonController.editSuccess(res))
             .catch(this.commonController.serverError(res));
     }
