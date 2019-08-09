@@ -1,6 +1,14 @@
 let sqlite3 = require('sqlite3').verbose();
+const fs = require('fs');
 
-let db = new sqlite3.Database('./db/equip.db');
+const path = './db/equip.db';
+
+let firstTime = false;
+if(!fs.existsSync(path)){
+    firstTime = true;
+}
+
+let db = new sqlite3.Database(path);
 
 let init = function() {
     db.run(`
@@ -85,6 +93,13 @@ let init = function() {
     `);
 
     db.run(`PRAGMA foreign_keys = ON`);
+
+    if(firstTime){
+        setTimeout(() => {
+            db.run(`INSERT INTO Users (Name, Lastname, IsAdmin, Uuid, FrequencySendData) VALUES ('Admin', 'Administrator', 1, '3aa18773-9d7d-4d85-9dbd-e50760c3e4ea', 3600)`);
+            db.run(`INSERT INTO Authentication (idUser, Username, Password, Salt) VALUES (1, 'admin', 'z3Cda/5QsTmtUo4WVuxvOVa9D6km9EILMQWBUQgwCGA=', 'qL3pR+BJnQS9dYNOGXfSmA==')`);
+        }, 1000);
+    }
 }
 
 
