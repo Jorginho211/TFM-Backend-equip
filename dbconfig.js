@@ -81,11 +81,11 @@ let init = function() {
 
     db.run(`
         CREATE TABLE IF NOT EXISTS MonitorData (
+            id          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
             idUser      INTEGER NULL,
             idPlace     INTEGER NULL,
             idEquipment INTEGER NULL,
             Date        DATE    NOT NULL,
-            PRIMARY KEY(idUser, idPlace, idEquipment),
             FOREIGN KEY(idUser) REFERENCES Users(id) ON DELETE CASCADE ON UPDATE CASCADE,
             FOREIGN KEY(idPlace) REFERENCES Places(id) ON DELETE CASCADE ON UPDATE CASCADE,
             FOREIGN KEY(idEquipment) REFERENCES Equipments(id) ON DELETE CASCADE ON UPDATE CASCADE
