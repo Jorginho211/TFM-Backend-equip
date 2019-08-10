@@ -22,19 +22,11 @@ let authorization = function (req, res, next) {
       let userDao = new UserDao();
       userDao.findById(decoded.id)
         .then((user) => {
-          if (!user.isAdmin) {
-            res.status(401).send({
-              error: "Usuario no admin"
-            });
-
-            return;
-          }
-
           next();
         })
         .catch(() => {
           res.status(401).send({
-            error: "Usuario no admin"
+            error: "Usuario no existe"
           });
         })
     }
@@ -61,7 +53,7 @@ let isAdmin = function(req, res, next){
     })
     .catch(() => {
       res.status(401).send({
-        error: "Usuario no admin"
+        error: "Usuario no existe"
       });
     })
 }
