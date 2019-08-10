@@ -1,6 +1,7 @@
 
 const UserDao = require("../daos/userDao");
 const PlaceDao = require("../daos/placeDao");
+const MonitorDataDao = require("../daos/monitorDataDao");
 const CommonController = require("./commonController");
 
 const jwt = require("jsonwebtoken");
@@ -8,6 +9,7 @@ const settings = require("../settings");
 
 const User = require('../entities/User');
 const Authentication = require('../entities/Authentication');
+const MonitorData = require('../entities/MonitorData');
 
 const uuid = require('uuid');
 
@@ -16,6 +18,7 @@ class UserController {
     constructor() {
         this.userDao = new UserDao();
         this.placeDao = new PlaceDao();
+        this.monitorDataDao = new MonitorDataDao();
         this.commonController = new CommonController();
     }
 
@@ -125,6 +128,24 @@ class UserController {
         let id = req.params.id;
 
         return this.placeDao.findPlacesByIdUser(id)
+            .then(this.commonController.success(res))
+            .catch(this.commonController.success(res));
+    }
+
+    asociateMonitorData(req, res) {
+        let monitorData = new MonitorData(req.body.date, req.body.place, req.body.equipments);
+        
+        let idUser = req.params.id;
+        return this.monitorDataDao.asociateMonitorDataToUser(idUser, monitorData)
+            .then(() => this.commonController.editSuccess(res)(monitorData))
+            .catch(this.commonController.serverError(res));
+    }
+
+    
+    findAllMonitorData(req, res) {
+        let idUser = req.params.id;
+
+        return this.monitorDataDao.findAllMonitorDataByIdUser(idUser)
             .then(this.commonController.success(res))
             .catch(this.commonController.success(res));
     }

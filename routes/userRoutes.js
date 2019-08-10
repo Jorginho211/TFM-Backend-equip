@@ -36,4 +36,12 @@ router.get('/:id/places', authorizationMiddleware.authorization, function(req, r
     userController.findUserPlaces(req, res);
 });
 
+router.get('/:id/monitorData', authorizationMiddleware.authorization, authorizationMiddleware.isAdmin, function(req, res){
+    userController.findAllMonitorData(req, res);
+});
+
+router.post('/:id/monitorData', authorizationMiddleware.authorization, function(req, res){
+    userController.asociateMonitorData(req, res);
+});
+
 module.exports = router;
