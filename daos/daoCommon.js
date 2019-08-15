@@ -80,7 +80,7 @@ class DaoCommon {
         return new Promise(function (resolve, reject) {
             let stmt = database.db.prepare(sqlRequest);
             stmt.run(sqlParams, function (err) {
-                if (this.changes === 1) {
+                if (this.changes > 0) {
                     resolve(this.lastID);
                 } else if (this.changes === 0) {
                     resolve();
