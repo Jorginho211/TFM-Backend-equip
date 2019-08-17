@@ -28,7 +28,7 @@ router.delete('/:id', authorizationMiddleware.authorization, authorizationMiddle
     placeController.deleteById(req, res);
 });
 
-router.get('/:id/equipments', authorizationMiddleware.authorization, authorizationMiddleware.isAdmin, function(req,res){
+router.get('/:id/equipments', authorizationMiddleware.authorization, function(req,res){
     placeController.findPlaceEquipments(req, res);
 });
 
